@@ -5,8 +5,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.app.inter.delegates.BaseListDelegate;
+import com.appa.valsp.ma.BaseListController;
 import com.vals.a2ios.mobilighter.intf.MobilAction;
 import com.vals.a2ios.mobilighter.intf.Mobilighter;
 
@@ -23,10 +27,9 @@ public class MobilighterImpl implements Mobilighter {
     protected Activity context;
 
     protected SimpleDateFormat dateFormat = new SimpleDateFormat();
-    // private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(Mobilighter.DATE_TIME_FORMAT_STR);
 
-    public MobilighterImpl() {
-    }
+//    public MobilighterImpl() {
+//    }
 
     @Override
     public void setContext(Object context) {
@@ -166,13 +169,23 @@ public class MobilighterImpl implements Mobilighter {
         }
         return " no date";
     }
-//    @Override
-//    public String dateTimeToString(Object date) {
-//        if (date != null && date instanceof Date) {
-//            Date d = (Date) date;
-//            return dateTimeFormat.format(d);
-//        }
-//        return " no date ";
-//    }
+
+    public void notifyTableDataRefresh(final Object delegate,
+                                       final Object tableObject) {
+        if (tableObject instanceof ListView) {
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    BaseListDelegate<?> del = (BaseListDelegate<?>)delegate;
+                    del.getRefreshLocalRecordCount();
+                    ListView lv = (ListView)tableObject;
+                    ListAdapter la = lv.getAdapter();
+                    BaseListController blc = (BaseListController)la;
+                    blc.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
 
 }

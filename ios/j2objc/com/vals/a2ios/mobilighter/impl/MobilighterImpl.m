@@ -23,12 +23,16 @@
     self = [super init];
     if ( self ) {
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat: Mobilighter_DATE_FORMAT_STR_];
+        // [self.dateFormatter setDateFormat: Mobilighter_DATE_FORMAT_STR_];
     }
     return self;
 }
 
-- (void)notifyTableDataRefreshWithBaseListCtrl:(id) ctrl withId:(id)tableObject {
+void MobilighterImpl_init(MobilighterImpl *self) {
+    (void) NSObject_init(self);
+}
+
+- (void)notifyTableDataRefreshWithId:(id) ctrl withId:(id)tableObject {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([tableObject isKindOfClass: [UITableView class]]) {
             UITableView *tv = (UITableView*)tableObject;

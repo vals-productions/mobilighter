@@ -87,6 +87,14 @@ public interface Mobilighter {
     public String dateToString(Object date, String pattern);
 
     /**
+     *
+     * @param delegate
+     * @param tableObject
+     */
+    public void notifyTableDataRefresh(final Object delegate,
+                                       final Object tableObject);
+
+    /**
      * Created by vsayenko on 8/20/15.
      */
     public static interface Navigator {

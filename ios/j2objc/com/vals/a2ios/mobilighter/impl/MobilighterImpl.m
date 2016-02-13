@@ -32,14 +32,6 @@ void MobilighterImpl_init(MobilighterImpl *self) {
     (void) NSObject_init(self);
 }
 
-- (void)notifyTableDataRefreshWithId:(id) ctrl withId:(id)tableObject {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([tableObject isKindOfClass: [UITableView class]]) {
-            UITableView *tv = (UITableView*)tableObject;
-            [tv reloadData];
-        }
-    });
-}
 
 - (NSString *)dateToStringWithId:(id)date withNSString: (NSString*) pattern {
     if (date != nil && [date isKindOfClass: [NSDate class]]) {

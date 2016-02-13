@@ -44,8 +44,8 @@
 - (NSString *)dateToStringWithId:(id)date
                     withNSString:(NSString *)pattern;
 
-- (void)notifyTableDataRefreshWithId:(id)delegate
-                              withId:(id)tableObject;
+//- (void)notifyTableDataRefreshWithId:(id)delegate
+//                              withId:(id)tableObject;
 
 @end
 

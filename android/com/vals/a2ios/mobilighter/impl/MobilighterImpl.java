@@ -36,6 +36,11 @@ public class MobilighterImpl implements Mobilighter {
         this.context = (Activity)context;
     }
 
+    @Override
+    public Object getContext() {
+        return context;
+    }
+
     public void showOkDialog(final String title, final String message, final MobilAction okAction) {
         context.runOnUiThread(new Runnable() {
             @Override
@@ -168,23 +173,6 @@ public class MobilighterImpl implements Mobilighter {
             return dateFormat.format(d);
         }
         return " no date";
-    }
-
-    public void notifyTableDataRefresh(final Object delegate,
-                                       final Object tableObject) {
-        if (tableObject instanceof ListView) {
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    BaseListDelegate<?> del = (BaseListDelegate<?>)delegate;
-                    del.getRefreshLocalRecordCount();
-                    ListView lv = (ListView)tableObject;
-                    ListAdapter la = lv.getAdapter();
-                    BaseListController blc = (BaseListController)la;
-                    blc.notifyDataSetChanged();
-                }
-            });
-        }
     }
 
 

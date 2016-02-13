@@ -10,4 +10,7 @@
 #include "java/lang/Exception.h"
 #include "java/util/Map.h"
 
+NSString *MobilCall_METHOD_POST_ = @"POST";
+NSString *MobilCall_METHOD_GET_ = @"GET";
+
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(MobilCall)

@@ -76,6 +76,8 @@
 
 + (NSString *)toNotNullWithNSString:(NSString *)value;
 
++ (NSString *)toStringWithId:(id)o;
+
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(MUtil)
@@ -119,6 +121,8 @@ FOUNDATION_EXPORT JavaLangDouble *MUtil_toDoubleWithId_(id value);
 FOUNDATION_EXPORT JavaLangInteger *MUtil_toIntWithId_(id value);
 
 FOUNDATION_EXPORT JavaLangLong *MUtil_toLongWithId_(id value);
+
+FOUNDATION_EXPORT NSString *MUtil_toStringWithId_(id o);
 
 FOUNDATION_EXPORT NSNumber *MUtil_toNotNullWithNSNumber_(NSNumber *value);
 

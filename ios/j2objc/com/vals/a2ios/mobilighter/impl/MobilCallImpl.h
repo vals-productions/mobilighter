@@ -15,6 +15,7 @@
 @class JavaLangStringBuilder;
 @class JavaNetHttpURLConnection;
 @class JavaNetURL;
+@protocol JavaUtilList;
 @protocol JavaUtilMap;
 @protocol MobilCallBack;
 
@@ -25,6 +26,7 @@
   NSString *relativeUrl_;
   NSString *urlParamString_;
   NSString *method_;
+  NSString *name_;
   JavaNetHttpURLConnection *connection_;
   JavaLangStringBuilder *stringBuilder_;
   id<JavaUtilMap> paramMap_;
@@ -37,7 +39,7 @@
   id<MobilCallBack> callBack_;
   JavaIoOutputStream *outputStream_;
   id<JavaUtilMap> httpHeaders_;
-  JavaLangException *lastException_;
+  id<JavaUtilList> throwableList_;
 }
 
 #pragma mark Public
@@ -62,6 +64,8 @@
 
 - (void)clearCookie;
 
+- (void)clearThrowableList;
+
 + (NSString *)concatUrlWithNSString:(NSString *)url1
                        withNSString:(NSString *)url2;
 
@@ -71,9 +75,15 @@
 
 - (jint)getResponseStatus;
 
+- (id<JavaUtilList>)getThrowableList;
+
 + (jboolean)isEmptyWithNSString:(NSString *)s1;
 
-- (void)remoteCallMakeOnThread;
+- (void)remoteCallMakeWithBoolean:(jboolean)isBlocking;
+
+- (void)remoteCallMakeAndWait;
+
+- (void)remoteCallMakeOnNewThread;
 
 - (void)setBaseUrlWithNSString:(NSString *)baseUrl;
 
@@ -84,6 +94,8 @@
 - (void)setJsonPayloadWithNSString:(NSString *)json;
 
 - (void)setMethodWithNSString:(NSString *)method;
+
+- (void)setNameWithNSString:(NSString *)name;
 
 - (void)setParamMapWithJavaUtilMap:(id<JavaUtilMap>)paramMap;
 
@@ -109,8 +121,6 @@
 
 - (void)readResponseCookieWithJavaNetHttpURLConnection:(JavaNetHttpURLConnection *)connection;
 
-- (void)remoteCallMake;
-
 - (void)setHeaderWithNSString:(NSString *)name
                  withNSString:(NSString *)value;
 
@@ -123,6 +133,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl, baseUrl_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, relativeUrl_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, urlParamString_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, method_, NSString *)
+J2OBJC_FIELD_SETTER(MobilCallImpl, name_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, connection_, JavaNetHttpURLConnection *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, stringBuilder_, JavaLangStringBuilder *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, paramMap_, id<JavaUtilMap>)
@@ -134,7 +145,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl, cookie_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, callBack_, id<MobilCallBack>)
 J2OBJC_FIELD_SETTER(MobilCallImpl, outputStream_, JavaIoOutputStream *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, httpHeaders_, id<JavaUtilMap>)
-J2OBJC_FIELD_SETTER(MobilCallImpl, lastException_, JavaLangException *)
+J2OBJC_FIELD_SETTER(MobilCallImpl, throwableList_, id<JavaUtilList>)
 
 FOUNDATION_EXPORT jboolean MobilCallImpl_isEmptyWithNSString_(NSString *s1);
 

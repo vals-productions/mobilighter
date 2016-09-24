@@ -1,5 +1,6 @@
 package com.vals.a2ios.mobilighter.intf;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +40,12 @@ public interface MobilCall {
 
     /**
      *
+     * @param name
+     */
+    void setName(String name);
+
+    /**
+     *
      * @return
      */
     MobilCallBack<?> getCallBack();
@@ -65,8 +72,11 @@ public interface MobilCall {
      *
      * @throws Exception
      */
-    void remoteCallMakeOnThread() throws Exception;
+    void remoteCallMakeOnNewThread() throws Exception;
 
+    void remoteCallMake(boolean isBlocking) throws Exception;
+
+    void remoteCallMakeAndWait() throws Exception;
     /**
      *
      * @param name
@@ -100,5 +110,16 @@ public interface MobilCall {
      * @param paramMap
      */
     void setParamMap(Map<String, Object> paramMap);
+
+    /**
+     *
+     * @return
+     */
+    public List<Throwable> getThrowableList();
+
+    /**
+     *
+     */
+    public void clearThrowableList();
 
 }

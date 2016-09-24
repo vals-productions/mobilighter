@@ -8,6 +8,7 @@
 #include "com/vals/a2ios/mobilighter/intf/MobilCall.h"
 #include "com/vals/a2ios/mobilighter/intf/MobilCallBack.h"
 #include "java/lang/Exception.h"
+#include "java/util/List.h"
 #include "java/util/Map.h"
 
 NSString *MobilCall_METHOD_POST_ = @"POST";

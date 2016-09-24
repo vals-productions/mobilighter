@@ -133,6 +133,9 @@ void MobilighterImpl_init(MobilighterImpl *self) {
     } else if ([textWidget isKindOfClass: [UITextView class]]) {
         UITextView *l = (UITextView*) textWidget;
         [l setText: text];
+    } else if([textWidget isKindOfClass: [UIBarButtonItem class]]) {
+        UIBarButtonItem *l = (UIBarButtonItem*) textWidget;
+        [l setTitle:text];
     }
 }
 
@@ -174,6 +177,54 @@ void MobilighterImpl_init(MobilighterImpl *self) {
         UIView *o = (UIView*)widget;
         o.hidden = FALSE;
     }
+}
+
+- (id)getContext {
+    return nil;
+}
+
+- (jboolean)isOnWithId:(id)toggleButton {
+    if ([toggleButton isKindOfClass: [UISwitch class]]) {
+        UISwitch *o = (UISwitch*)toggleButton;
+        return o.isOn;
+    }
+    return NO;
+}
+
+- (void)setOnWithId:(id)toggleButton
+        withBoolean:(jboolean)isOn {
+    if ([toggleButton isKindOfClass: [UISwitch class]]) {
+        UISwitch *o = (UISwitch*)toggleButton;
+        [o setOn:isOn animated: YES];
+    }
+}
+
+- (NSString *)readFileWithNSString:(NSString *)fileName {
+    NSString *jsonFileName = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: fileName];
+    NSError* error = nil;
+    NSString *jsonString = [NSString stringWithContentsOfFile:jsonFileName encoding:NSUTF8StringEncoding error:&error];
+    if (!error) {
+        return jsonString;
+    }
+    return nil;
+}
+
+- (void)showWaitPopupWithNSString:(NSString *)title
+                     withNSString:(NSString *)message {
+    
+}
+
+- (void)hideWaitPopup {
+    
+}
+
+- (void)runOnUiThreadWithMobilAction:(id<MobilAction>)action {
+    
+}
+
+- (void)setEnabledWithId:(id)widget
+             withBoolean:(jboolean)isEnabled {
+    
 }
 
 @end

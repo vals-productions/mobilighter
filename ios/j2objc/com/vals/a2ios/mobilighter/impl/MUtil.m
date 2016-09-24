@@ -117,6 +117,10 @@ __attribute__((unused)) static NSString *MUtil_emptyIfNullWithNSString_(NSString
   return MUtil_toLongWithId_(value);
 }
 
++ (NSString *)toStringWithId:(id)o {
+  return MUtil_toStringWithId_(o);
+}
+
 + (NSNumber *)toNotNullWithNSNumber:(NSNumber *)value {
   return MUtil_toNotNullWithNSNumber_(value);
 }
@@ -156,6 +160,9 @@ jboolean MUtil_isNewerWithJavaUtilDate_withJavaUtilDate_(JavaUtilDate *d1, JavaU
   }
   if (d1 != nil && d2 == nil) {
     return true;
+  }
+  if (d1 == nil && d2 != nil) {
+    return false;
   }
   if ([((JavaUtilDate *) nil_chk(d1)) afterWithJavaUtilDate:d2]) {
     return true;
@@ -375,6 +382,16 @@ JavaLangLong *MUtil_toLongWithId_(id value) {
     }
   }
   return nil;
+}
+
+NSString *MUtil_toStringWithId_(id o) {
+  MUtil_initialize();
+  if (o == nil) {
+    return @"";
+  }
+  else {
+    return [o description];
+  }
 }
 
 NSNumber *MUtil_toNotNullWithNSNumber_(NSNumber *value) {

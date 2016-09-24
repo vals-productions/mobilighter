@@ -8,6 +8,7 @@
 
 #include "J2ObjC_header.h"
 
+@protocol JavaUtilList;
 @protocol JavaUtilMap;
 @protocol MobilCallBack;
 
@@ -22,6 +23,8 @@
 - (void)addHeaderWithNSString:(NSString *)name
                  withNSString:(NSString *)value;
 
+- (void)setNameWithNSString:(NSString *)name;
+
 - (id<MobilCallBack>)getCallBack;
 
 - (void)setCookieHeaderWithNSString:(NSString *)c;
@@ -30,7 +33,11 @@
 
 - (void)setMethodWithNSString:(NSString *)method;
 
-- (void)remoteCallMakeOnThread;
+- (void)remoteCallMakeOnNewThread;
+
+- (void)remoteCallMakeWithBoolean:(jboolean)isBlocking;
+
+- (void)remoteCallMakeAndWait;
 
 - (void)addUrlParameterWithNSString:(NSString *)name
                              withId:(id)value;
@@ -45,6 +52,10 @@
                  withJavaUtilMap:(id<JavaUtilMap>)map;
 
 - (void)setParamMapWithJavaUtilMap:(id<JavaUtilMap>)paramMap;
+
+- (id<JavaUtilList>)getThrowableList;
+
+- (void)clearThrowableList;
 
 @end
 

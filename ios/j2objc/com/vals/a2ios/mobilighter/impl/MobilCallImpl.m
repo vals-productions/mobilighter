@@ -24,6 +24,7 @@
 #include "java/net/URLConnection.h"
 #include "java/net/URLEncoder.h"
 #include "java/util/HashMap.h"
+#include "java/util/List.h"
 #include "java/util/Map.h"
 #include "java/util/Set.h"
 
@@ -78,6 +79,10 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
   (void) [((id<JavaUtilMap>) nil_chk(httpHeaders_)) putWithId:name withId:value];
 }
 
+- (void)setNameWithNSString:(NSString *)name {
+  self->name_ = name;
+}
+
 - (void)setHeaderWithNSString:(NSString *)name
                  withNSString:(NSString *)value {
   if (name != nil && value != nil) {
@@ -117,11 +122,6 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
   [((JavaNetHttpURLConnection *) nil_chk(connection_)) connect];
 }
 
-- (void)remoteCallMakeOnThread {
-  MobilCallImpl_MobilCallThreadImpl *at = new_MobilCallImpl_MobilCallThreadImpl_initWithMobilCallBack_withMobilCallImpl_(callBack_, self);
-  [at start];
-}
-
 - (jboolean)isErrorWithInt:(jint)responseStatus {
   return responseStatus >= 400 && responseStatus < 600;
 }
@@ -139,7 +139,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
     [self readResponseCookieWithJavaNetHttpURLConnection:connection_];
   }
   @catch (JavaLangThrowable *t) {
-    [((JavaLangThrowable *) nil_chk(t)) printStackTrace];
+    [((id<JavaUtilList>) nil_chk(throwableList_)) addWithId:t];
   }
 }
 
@@ -276,10 +276,32 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
   }
 }
 
-- (void)remoteCallMake {
+- (void)remoteCallMakeWithBoolean:(jboolean)isBlocking {
+  if (isBlocking) {
+    [self remoteCallMakeAndWait];
+  }
+  else {
+    [self remoteCallMakeOnNewThread];
+  }
+}
+
+- (void)remoteCallMakeAndWait {
   [self prepareAndConnect];
   [self consumeResponse];
   [self processServerResponseWithBoolean:true];
+}
+
+- (void)remoteCallMakeOnNewThread {
+  MobilCallImpl_MobilCallThreadImpl *at = new_MobilCallImpl_MobilCallThreadImpl_initWithMobilCallBack_withMobilCallImpl_(callBack_, self);
+  [at start];
+}
+
+- (id<JavaUtilList>)getThrowableList {
+  return throwableList_;
+}
+
+- (void)clearThrowableList {
+  [((id<JavaUtilList>) nil_chk(throwableList_)) clear];
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -382,6 +404,7 @@ void MobilCallImpl_init(MobilCallImpl *self) {
   self->baseUrl_ = @"";
   self->relativeUrl_ = @"";
   self->method_ = @"GET";
+  self->name_ = @"default";
   self->paramMap_ = new_JavaUtilHashMap_init();
   self->urlParamMap_ = new_JavaUtilHashMap_init();
   self->charset_ = @"UTF-8";
@@ -407,9 +430,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(MobilCallImpl)
 
 - (void)run {
   @try {
-    [((MobilCallImpl *) nil_chk(netCall_)) remoteCallMake];
+    [((MobilCallImpl *) nil_chk(netCall_)) remoteCallMakeAndWait];
   }
   @catch (JavaLangThrowable *t) {
+    [((JavaLangThrowable *) nil_chk(t)) printStackTrace];
     if (callback_ != nil) {
       [callback_ onErrorWithJavaLangThrowable:t withJavaLangInteger:nil withNSString:nil];
     }

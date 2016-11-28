@@ -8,8 +8,8 @@
 
 #include "J2ObjC_header.h"
 
-@protocol JavaUtilList;
 @protocol JavaUtilMap;
+@protocol MobilAction;
 @protocol MobilCallBack;
 
 @protocol MobilCall < NSObject, JavaObject >
@@ -53,9 +53,7 @@
 
 - (void)setParamMapWithJavaUtilMap:(id<JavaUtilMap>)paramMap;
 
-- (id<JavaUtilList>)getThrowableList;
-
-- (void)clearThrowableList;
+- (void)setOnErrorActionWithMobilAction:(id<MobilAction>)mobilAction;
 
 @end
 

@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,9 +32,6 @@ public class MobilighterImpl implements Mobilighter {
     protected Activity activity;
 
     protected SimpleDateFormat dateFormat = new SimpleDateFormat();
-
-//    public MobilighterImpl() {
-//    }
 
     @Override
     public void setContext(Object context) {
@@ -73,17 +72,15 @@ public class MobilighterImpl implements Mobilighter {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //DialogUtil.showOkMessage(error, context);
                 new AlertDialog.Builder(context)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-//                        ay.onYes();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             }
         });
     }
@@ -93,38 +90,27 @@ public class MobilighterImpl implements Mobilighter {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // DialogUtil.showConfirmDialog(error, context, actionYes, actionNo);
                 new AlertDialog.Builder(context)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                actionNo.onAction(null);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                actionYes.onAction(null);
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            actionYes.onAction(null);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            actionNo.onAction(null);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             }
         });
     }
 
-//    @Override
-//    public void scheduleNextStart() {
-//        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-//
-//        Intent intent = new Intent(context, AppReceiver.class);
-//        intent.putExtra("onetime", Boolean.FALSE);
-//        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-//        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 10, pi);
-//    }
-
     public void setPlaceholder(Object textWidget, String text) {
-        if (textWidget instanceof TextView) {
+        if (textWidget != null && textWidget instanceof TextView) {
             TextView et = (TextView)textWidget;
             et.setHint(text);
         }
@@ -133,10 +119,10 @@ public class MobilighterImpl implements Mobilighter {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (textWidget instanceof Button) {
+                if (textWidget != null && textWidget instanceof Button) {
                     Button b = (Button)textWidget;
                     b.setText(text);
-                } else  if (textWidget instanceof TextView) {
+                } else  if (textWidget != null && textWidget instanceof TextView) {
                     TextView et = (TextView)textWidget;
                     et.setText(text);
                 }
@@ -144,7 +130,7 @@ public class MobilighterImpl implements Mobilighter {
         });
     }
     public String getText(Object textWidget) {
-        if (textWidget instanceof TextView) {
+        if (textWidget != null && textWidget instanceof TextView) {
             TextView et = (TextView)textWidget;
             return et.getText().toString();
         }
@@ -152,7 +138,7 @@ public class MobilighterImpl implements Mobilighter {
     }
     
     public void addActionListener(Object widget, final MobilAction action) {
-        if (widget instanceof Button) {
+        if (widget != null && widget instanceof Button) {
                 final Button b = (Button) widget;
                 b.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -164,14 +150,14 @@ public class MobilighterImpl implements Mobilighter {
     }
 
     public void show(Object widget) {
-        if (widget instanceof View) {
+        if (widget != null && widget instanceof View) {
             View et = (View)widget;
             et.setVisibility(View.VISIBLE);
         }
     }
 
     public void hide(Object widget) {
-        if (widget instanceof View) {
+        if (widget != null && widget instanceof View) {
             View et = (View)widget;
             et.setVisibility(View.INVISIBLE);
         }
@@ -179,7 +165,7 @@ public class MobilighterImpl implements Mobilighter {
 
 
     public void setEnabled(Object widget, boolean isEnabled) {
-        if(widget instanceof View) {
+        if(widget != null && widget instanceof View) {
             View et = (View)widget;
             et.setEnabled(isEnabled);
         }
@@ -190,7 +176,7 @@ public class MobilighterImpl implements Mobilighter {
     }
 
     public boolean isOn(Object toggleButton) {
-        if(toggleButton instanceof ToggleButton) {
+        if(toggleButton != null && toggleButton instanceof ToggleButton) {
             ToggleButton tb = (ToggleButton) toggleButton;
             return tb.isChecked();
         }
@@ -199,7 +185,7 @@ public class MobilighterImpl implements Mobilighter {
 
     @Override
     public void setOn(Object toggleButton, boolean isOn) {
-        if(toggleButton instanceof ToggleButton) {
+        if(toggleButton != null && toggleButton instanceof ToggleButton) {
             ToggleButton tb = (ToggleButton) toggleButton;
             tb.setChecked(isOn);
         }
@@ -262,5 +248,27 @@ public class MobilighterImpl implements Mobilighter {
         }
     }
 
+    @Override
+    public void setFont(Object widget, Object font, Object size) {
+        if(widget != null) {
+            TextView et = (TextView)widget;
+            if (font != null) {
+                Typeface f = (Typeface) font;
+                et.setTypeface(f);
+            }
+            if (size != null) {
+                Integer i = (Integer)size;
+                et.setTextSize(i);
+            }
+        }
+    }
+
+    @Override
+    public void setTextColor(Object widget, float r, float g, float b, float a) {
+        if(widget instanceof TextView) {
+            TextView o = (TextView) widget;
+            o.setTextColor(Color.argb((int)a, (int)r, (int)g, (int)b));
+        }
+    }
 
 }

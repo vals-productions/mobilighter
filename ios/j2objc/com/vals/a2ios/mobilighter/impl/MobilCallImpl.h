@@ -13,10 +13,11 @@
 @class JavaIoOutputStream;
 @class JavaLangException;
 @class JavaLangStringBuilder;
+@class JavaLangThrowable;
 @class JavaNetHttpURLConnection;
 @class JavaNetURL;
-@protocol JavaUtilList;
 @protocol JavaUtilMap;
+@protocol MobilAction;
 @protocol MobilCallBack;
 
 @interface MobilCallImpl : NSObject < MobilCall > {
@@ -39,7 +40,6 @@
   id<MobilCallBack> callBack_;
   JavaIoOutputStream *outputStream_;
   id<JavaUtilMap> httpHeaders_;
-  id<JavaUtilList> throwableList_;
 }
 
 #pragma mark Public
@@ -64,8 +64,6 @@
 
 - (void)clearCookie;
 
-- (void)clearThrowableList;
-
 + (NSString *)concatUrlWithNSString:(NSString *)url1
                        withNSString:(NSString *)url2;
 
@@ -75,9 +73,9 @@
 
 - (jint)getResponseStatus;
 
-- (id<JavaUtilList>)getThrowableList;
-
 + (jboolean)isEmptyWithNSString:(NSString *)s1;
+
+- (void)onErrorWithJavaLangThrowable:(JavaLangThrowable *)t;
 
 - (void)remoteCallMakeWithBoolean:(jboolean)isBlocking;
 
@@ -97,13 +95,13 @@
 
 - (void)setNameWithNSString:(NSString *)name;
 
+- (void)setOnErrorActionWithMobilAction:(id<MobilAction>)mobilAction;
+
 - (void)setParamMapWithJavaUtilMap:(id<JavaUtilMap>)paramMap;
 
 - (void)setRelativeUrlWithNSString:(NSString *)relativeUrl;
 
 #pragma mark Protected
-
-- (void)beforeConnect;
 
 - (void)connect;
 
@@ -114,6 +112,8 @@
 - (void)finishWithSuccess;
 
 - (jboolean)isErrorWithInt:(jint)responseStatus;
+
+- (void)onBeforeConnect;
 
 - (void)prepareAndConnect;
 
@@ -145,7 +145,6 @@ J2OBJC_FIELD_SETTER(MobilCallImpl, cookie_, NSString *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, callBack_, id<MobilCallBack>)
 J2OBJC_FIELD_SETTER(MobilCallImpl, outputStream_, JavaIoOutputStream *)
 J2OBJC_FIELD_SETTER(MobilCallImpl, httpHeaders_, id<JavaUtilMap>)
-J2OBJC_FIELD_SETTER(MobilCallImpl, throwableList_, id<JavaUtilList>)
 
 FOUNDATION_EXPORT jboolean MobilCallImpl_isEmptyWithNSString_(NSString *s1);
 

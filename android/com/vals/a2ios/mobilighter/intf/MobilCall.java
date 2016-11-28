@@ -111,15 +111,6 @@ public interface MobilCall {
      */
     void setParamMap(Map<String, Object> paramMap);
 
-    /**
-     *
-     * @return
-     */
-    public List<Throwable> getThrowableList();
-
-    /**
-     *
-     */
-    public void clearThrowableList();
+    void setOnErrorAction(MobilAction mobilAction);
 
 }

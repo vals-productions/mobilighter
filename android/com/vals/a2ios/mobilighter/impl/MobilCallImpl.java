@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vals.a2ios.mobilighter.intf.MobilAction;
 import com.vals.a2ios.mobilighter.intf.MobilCallBack;
 import com.vals.a2ios.mobilighter.intf.MobilCall;
 
@@ -41,7 +42,7 @@ public class MobilCallImpl implements MobilCall {
     protected MobilCallBack<?> callBack;
     protected OutputStream outputStream;
     protected Map<String, String> httpHeaders = new HashMap<>();
-    protected List<Throwable> throwableList;
+    private MobilAction onErrorAction;
 
     @Override
     public void setBaseUrl(String baseUrl) {
@@ -139,8 +140,9 @@ public class MobilCallImpl implements MobilCall {
             readResponseCookie(connection);
         } catch (Throwable t) {
 //            t.printStackTrace(); // TODO
-            throwableList.add(t);
+//            throwableList.add(t);
 //            lastException = t;
+            onError(t);
         }
     }
 
@@ -273,7 +275,7 @@ public class MobilCallImpl implements MobilCall {
         return url1 + "/" + url2;
     }
 
-    protected void beforeConnect() {
+    protected void onBeforeConnect() {
     }
 
     protected void prepareAndConnect() throws Exception {
@@ -286,7 +288,7 @@ public class MobilCallImpl implements MobilCall {
             connection.setRequestMethod(method);
             connection.setRequestProperty("Accept-Charset", charset);
             specHeaders();
-            beforeConnect();
+            onBeforeConnect();
             connect();
         } else if("post".equalsIgnoreCase(method)) {
             urlParamString = buildUrlParams(urlParamMap);
@@ -300,12 +302,12 @@ public class MobilCallImpl implements MobilCall {
             if (jsonPayload != null) {
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/json");
-                beforeConnect();
+                onBeforeConnect();
                 writePostBody(jsonPayload);
             } else {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                beforeConnect();
-                writePostBody(buildUrlParams(paramMap)); // writes to body if not url params
+                onBeforeConnect();
+                writePostBody(buildUrlParams(paramMap)); // writes to body if not url cameraParams
             }
         }
     }
@@ -331,30 +333,6 @@ public class MobilCallImpl implements MobilCall {
         MobilCallThreadImpl at = new MobilCallThreadImpl(callBack, this);
         at.start();
     }
-
-
-//    @Override
-//    public boolean remoteCallMakeWithRetry() {
-//        try {
-//            int tryCount = 0;
-//            boolean processResult;
-//            do {
-//                if (tryCount > 0) {
-//                    Thread.sleep(retryDelay);
-//                }
-//                tryCount++;
-//                remoteCallMakeAndWait();
-//                processResult = processServerResponse(tryCount < tryCountMax);
-//            } while(tryCount < tryCountMax && processResult == false);
-//            return processResult;
-//        } catch (Exception e) {
-//            lastException = e;
-//            if(callBack != null) {
-//                finishWithError(e);
-//            }
-//            return false;
-//        }
-//    }
 
     /**
      * Created by vsayenko on 8/5/15.
@@ -382,11 +360,13 @@ public class MobilCallImpl implements MobilCall {
         }
     }
 
-    public List<Throwable> getThrowableList() {
-        return throwableList;
+    public void onError(Throwable t) {
+        if(onErrorAction != null) {
+            onErrorAction.onAction(t);
+        }
     }
 
-    public void clearThrowableList() {
-        throwableList.clear();
+    public void setOnErrorAction(MobilAction mobilAction) {
+        this.onErrorAction = mobilAction;
     }
 }

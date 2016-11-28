@@ -15,8 +15,8 @@ ROOT_DIR=../
 ./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/intf/MobilAction.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/intf/MobilCallBack.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/intf/MobilCall.java
+./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/intf/MobilColor.java
 
-./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/impl/MUtil.java
+# ./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/impl/MUtil.java
 ./j2objc.sh $ROOT_DIR/ios/j2objc $ROOT_DIR/android com/vals/a2ios/mobilighter/impl/MobilCallImpl.java
-
 # end

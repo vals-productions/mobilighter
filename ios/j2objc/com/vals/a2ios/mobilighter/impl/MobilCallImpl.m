@@ -7,6 +7,7 @@
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "com/vals/a2ios/mobilighter/impl/MobilCallImpl.h"
+#include "com/vals/a2ios/mobilighter/intf/MobilAction.h"
 #include "com/vals/a2ios/mobilighter/intf/MobilCallBack.h"
 #include "java/io/BufferedReader.h"
 #include "java/io/IOException.h"
@@ -24,11 +25,13 @@
 #include "java/net/URLConnection.h"
 #include "java/net/URLEncoder.h"
 #include "java/util/HashMap.h"
-#include "java/util/List.h"
 #include "java/util/Map.h"
 #include "java/util/Set.h"
 
-@interface MobilCallImpl ()
+@interface MobilCallImpl () {
+ @public
+  id<MobilAction> onErrorAction_;
+}
 
 - (void)specHeaders;
 
@@ -39,6 +42,8 @@
 - (NSString *)buildUrlParamsWithJavaUtilMap:(id<JavaUtilMap>)paramMap;
 
 @end
+
+J2OBJC_FIELD_SETTER(MobilCallImpl, onErrorAction_, id<MobilAction>)
 
 __attribute__((unused)) static void MobilCallImpl_specHeaders(MobilCallImpl *self);
 
@@ -139,7 +144,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
     [self readResponseCookieWithJavaNetHttpURLConnection:connection_];
   }
   @catch (JavaLangThrowable *t) {
-    [((id<JavaUtilList>) nil_chk(throwableList_)) addWithId:t];
+    [self onErrorWithJavaLangThrowable:t];
   }
 }
 
@@ -237,7 +242,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
   return MobilCallImpl_concatUrlWithNSString_withNSString_(url1, url2);
 }
 
-- (void)beforeConnect {
+- (void)onBeforeConnect {
 }
 
 - (void)prepareAndConnect {
@@ -250,7 +255,7 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
     [((JavaNetHttpURLConnection *) nil_chk(connection_)) setRequestMethodWithNSString:method_];
     [connection_ setRequestPropertyWithNSString:@"Accept-Charset" withNSString:charset_];
     MobilCallImpl_specHeaders(self);
-    [self beforeConnect];
+    [self onBeforeConnect];
     [self connect];
   }
   else if ([@"post" equalsIgnoreCase:method_]) {
@@ -265,12 +270,12 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
     if (jsonPayload_ != nil) {
       [connection_ setRequestPropertyWithNSString:@"Content-Type" withNSString:@"application/json"];
       [connection_ setRequestPropertyWithNSString:@"Accept" withNSString:@"application/json"];
-      [self beforeConnect];
+      [self onBeforeConnect];
       MobilCallImpl_writePostBodyWithNSString_(self, jsonPayload_);
     }
     else {
       [connection_ setRequestPropertyWithNSString:@"Content-Type" withNSString:@"application/x-www-form-urlencoded"];
-      [self beforeConnect];
+      [self onBeforeConnect];
       MobilCallImpl_writePostBodyWithNSString_(self, MobilCallImpl_buildUrlParamsWithJavaUtilMap_(self, paramMap_));
     }
   }
@@ -296,12 +301,14 @@ J2OBJC_FIELD_SETTER(MobilCallImpl_MobilCallThreadImpl, netCall_, MobilCallImpl *
   [at start];
 }
 
-- (id<JavaUtilList>)getThrowableList {
-  return throwableList_;
+- (void)onErrorWithJavaLangThrowable:(JavaLangThrowable *)t {
+  if (onErrorAction_ != nil) {
+    [onErrorAction_ onActionWithId:t];
+  }
 }
 
-- (void)clearThrowableList {
-  [((id<JavaUtilList>) nil_chk(throwableList_)) clear];
+- (void)setOnErrorActionWithMobilAction:(id<MobilAction>)mobilAction {
+  self->onErrorAction_ = mobilAction;
 }
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
